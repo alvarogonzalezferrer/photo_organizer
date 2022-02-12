@@ -53,6 +53,7 @@ type
 
   TMainForm = class(TForm)
     FolderStructureCombo: TComboBox;
+    LabelStatus: TLabel;
     SortModeLabel: TLabel;
     ProgressBar1: TProgressBar;
     ResultsMemo: TMemo;
@@ -237,7 +238,7 @@ begin
      CloseFile(tfIn);
     end;
 
-    ShowMessage('DEBUG all done ready to clean up'); // DEBUG
+    //ShowMessage('DEBUG all done ready to clean up'); // DEBUG
 
     // cleanup
     // delete temp files
