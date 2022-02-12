@@ -138,7 +138,10 @@ var
      s : String; // tmp read line
      photoIn : String; // photo in path
      photoOut : String; // photo out path
-
+     // file date for photos without EXIF
+     fileDate : TDateTime;
+     fileDateLongInt : Longint;
+     fileDateStr : String;
 begin
 
      // disable all controls
@@ -183,7 +186,7 @@ begin
     // DEBUG WE SHOULD TAKE DATE FORMAT FROM COMBO
     // TAG DateTimeOriginal no funciona en videos
     // TAG CreateDate  deberia funcionar en video tambien
-    batchCommand := '@echo DONT CLOSE THIS WINDOW WE ARE READING YOUR PHOTOS DATES && @' + exifTool + ' -T -FilePath -CreateDate -d %Y/%m -@ '+ tmpFileList + ' > ' + tmpFileOutputList ;
+    batchCommand := '@echo DONT CLOSE THIS WINDOW WE ARE READING YOUR PHOTOS DATES - WAIT PLEASE! && @echo ESPERE POR FAVOR - NO CIERRE ESTA VENTANA && @' + exifTool + ' -T -FilePath -CreateDate -d %Y/%m -@ '+ tmpFileList + ' > ' + tmpFileOutputList ;
 
     ShowMessage('We will scan your photos for date EXIF data' + LineEnding + 'This will open a special window, do NOT close it.' + LineEnding + 'Let the process end without closing the window!');
 
@@ -202,18 +205,34 @@ begin
        while not eof (tfIn) do
        begin
             ReadLn(tfIn, s);
+            // split before and after the tab character , thats why we used -T calling exiftool!
             photoIn := Copy(s, 1, pos(#9, s)-1);
             photoOut:= Copy(s, pos(#9, s)+1, s.Length);
 
-            // EXIFTOOL USA / Y NECESITO USAR \
-
-            photoIn := StringReplace(photoIn, '/', '\', [rfReplaceAll, rfIgnoreCase]);
-            photoOut := StringReplace(photoOut, '/', '\', [rfReplaceAll, rfIgnoreCase]);
-
-            // debug if date is - means no data
+            // debug if date is '-' means no EXIF data present
             // should attemp to take date from file date!
             if photoOut = '-' then
-               photoOut:= 'no_date';
+            begin
+               // no EXIF date, try with file date
+               fileDateLongInt := FileAge(photoIn);
+
+               If fileDateLongInt <> -1 then
+               begin
+                     fileDate := FileDateTodateTime(fileDateLongInt);
+                     DateTimeToString(fileDateStr, 'yyyy\mm', fileDate ); // replace format with combo box option!! DEBUG
+                     ShowMessage('DEBUG found date ' + fileDateStr + LineEnding + ExtractFileName(photoIn));
+                     photoOut:= fileDateStr;
+               end
+               else
+               begin
+                    // I cant find the damn date
+                    photoOut:= 'no_date_found';
+               end;
+            end;
+
+            // EXIFTOOL USA / Y NECESITO USAR \
+            photoIn := StringReplace(photoIn, '/', '\', [rfReplaceAll, rfIgnoreCase]);
+            photoOut := StringReplace(photoOut, '/', '\', [rfReplaceAll, rfIgnoreCase]);
 
             // real path
             photoOut := OutputFolder.Caption + photoOut;
@@ -231,14 +250,11 @@ begin
             // progress bar
             ProgressBar1.Position := ProgressBar1.Position + 1;
             Application.ProcessMessages;
-
        end;
 
     finally
      CloseFile(tfIn);
     end;
-
-
 
     // cleanup
     // delete temp files
