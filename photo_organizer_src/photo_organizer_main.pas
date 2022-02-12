@@ -148,6 +148,7 @@ begin
      // disable all controls
      ChooseoOutputBtn.Enabled:=False;
      ChooseSourceBtn.Enabled:=False;
+     IncludeSubDirs.Enabled:=False;
      FindPhotosBtn.Enabled:=False;
      CopyPhotosBTN.Enabled:=False;
      CopyPhotosBTN.Caption:='WORKING!';
@@ -215,7 +216,7 @@ begin
             // debug if date is '-' means no EXIF data present
             // if EXIF data of video is 0000:00:00 00:00:00 means that no EXIF data was set also
             // should attemp to take date from file date!
-            if photoOut = '-' or photoOut = '0000:00:00 00:00:00' or pos(':', photoOut) > 0  then
+            if (photoOut = '-') or (photoOut = '0000:00:00 00:00:00') or (pos(':', photoOut) > 0)  then
             begin
                if GuessDateCheckBox.Checked then // no EXIF date, try with file date
                begin
@@ -280,8 +281,19 @@ begin
     DeleteFile(tmpFileOutputList);
     //DeleteFile(tmpFileBatch);
 
-    // disable buttons and reset interface
-    // DEBUG / NOT DONE
+    // enable buttons and reset interface
+    ChooseSourceBtn.Enabled:=True;
+    IncludeSubDirs.Enabled:=True;
+    FindPhotosBtn.Enabled:=False;
+    CopyPhotosBTN.Enabled:=False;
+    CopyPhotosBTN.Caption:='COPY PHOTOS';
+    LabelStatus.Enabled:=False;
+    LabelStatus.Caption:='All done, ' + ProgressBar1.Position.ToString + ' files managed.';
+    FolderStructureCombo.Enabled:=True;
+    GuessDateCheckBox.Enabled:=True;
+
+    // open explorer in new folder structure // debug this is ok?
+    ExecuteProcess('start', OutputFolder.Caption );
 
     // OK message
     ShowMessage('Everything done! Thanks!');
