@@ -132,7 +132,6 @@ var
      tmpFileList : String; // temp file path with photo list
      tmpFileHandle : TFileStream; // temp file with photo list
      tmpFileOutputList : String; // temp file path with photo and exif list
-     //tmpFileBatch : String; // temp file to call exiftools
      batchCommand : String; // command in batch file
      exifTool : String; // command for exif tool / debug should be configurable
      tfIn : TextFile; // input file from exiftool output
@@ -143,8 +142,9 @@ var
      fileDate : TDateTime;
      fileDateLongInt : Longint;
      fileDateStr : String;
+     // folder format date , year , etc
+     folderFormat : String;
 begin
-
      // disable all controls
      ChooseoOutputBtn.Enabled:=False;
      ChooseSourceBtn.Enabled:=False;
@@ -152,7 +152,8 @@ begin
      CopyPhotosBTN.Enabled:=False;
      CopyPhotosBTN.Caption:='WORKING!';
      LabelStatus.Enabled:=True;
-
+     FolderStructureCombo.Enabled:=False;
+     GuessDateCheckBox.Enabled:=False;
 
     // create list of files to process
     tmpFileList := GetTempFileName(); // get temp filename for output
@@ -169,29 +170,30 @@ begin
     // fist get exif data from the list of photos we have
     // we use exiftool -- https://exiftool.org/
 
-    //ShowMessage('IN @ ' + tmpFileList); // DEBUG
-
-    //ShowMessage('EXE > ' + exifTool ); // my exe
-
     tmpFileOutputList := GetTempFileName(); // tmp file 2, need to catch it after creating 1st file
 
     // execute exiftool *should be in same path as our exe file*
     // parameters
     // exiftool -T -FilePath -DateTimeOriginal -d %Y\%m -@ LISTA_DE_ARCHIVOS.TXT
 
-    //tmpFileBatch:= GetTempFileName('', 'BAT') + '.bat';
-
-    //ShowMessage('OUT > ' + tmpFileOutputList); // DEBUG
-    //ShowMessage('BAT ' + tmpFileBatch); // DEBUG
-
-    // DEBUG WE SHOULD TAKE DATE FORMAT FROM COMBO
+    // NOTE>
     // TAG DateTimeOriginal no funciona en videos
     // TAG CreateDate  deberia funcionar en video tambien
-    batchCommand := '@echo DONT CLOSE THIS WINDOW WE ARE READING YOUR PHOTOS DATES - WAIT PLEASE! && @echo ESPERE POR FAVOR - NO CIERRE ESTA VENTANA && @' + exifTool + ' -T -FilePath -CreateDate -d %Y/%m -@ '+ tmpFileList + ' > ' + tmpFileOutputList ;
+
+    folderFormat := '%Y/%m'; // default format year / month
+
+    case FolderStructureCombo.ItemIndex of
+         0: folderFormat := '%Y/%m';
+         1: folderFormat := '%Y/%m/%d';
+         2: folderFormat := '%Y';
+         3: folderFormat := '%m';
+    end;
+
+    batchCommand := '@echo DONT CLOSE THIS WINDOW WE ARE READING YOUR PHOTOS DATES - WAIT PLEASE! && @echo ESPERE POR FAVOR - NO CIERRE ESTA VENTANA && @' + exifTool + ' -T -FilePath -CreateDate -d ' + folderFormat + ' -@ '+ tmpFileList + ' > ' + tmpFileOutputList ;
 
     ShowMessage('We will scan your photos for date EXIF data' + LineEnding + 'This will open a special window, do NOT close it.' + LineEnding + 'Let the process end without closing the window!');
 
-    ExecuteProcess('cmd','/c ' + batchCommand); // debug esto tarda mucho y abre una ventana negra, deberia avisar!!
+    ExecuteProcess('cmd','/c ' + batchCommand); // DEBUG change this to a better process
 
     // progress bar
     ProgressBar1.Max := ResultsMemo.Lines.Count;
@@ -211,8 +213,9 @@ begin
             photoOut:= Copy(s, pos(#9, s)+1, s.Length);
 
             // debug if date is '-' means no EXIF data present
+            // if EXIF data of video is 0000:00:00 00:00:00 means that no EXIF data was set also
             // should attemp to take date from file date!
-            if photoOut = '-' then
+            if photoOut = '-' or photoOut = '0000:00:00 00:00:00' or pos(':', photoOut) > 0  then
             begin
                if GuessDateCheckBox.Checked then // no EXIF date, try with file date
                begin
@@ -220,8 +223,16 @@ begin
 
                  If fileDateLongInt <> -1 then // worked?
                  begin
+
+                        case FolderStructureCombo.ItemIndex of
+                             0: folderFormat := 'yyyy\mm';
+                             1: folderFormat := 'yyyy\mm\dd';
+                             2: folderFormat := 'yyyy';
+                             3: folderFormat := 'mm';
+                        end;
+
                        fileDate := FileDateTodateTime(fileDateLongInt);
-                       DateTimeToString(fileDateStr, 'yyyy\mm', fileDate ); // replace format with combo box option!! DEBUG
+                       DateTimeToString(fileDateStr, folderFormat, fileDate );
                        //ShowMessage('DEBUG found date ' + fileDateStr + LineEnding + ExtractFileName(photoIn));
                        photoOut:= fileDateStr;
                  end
