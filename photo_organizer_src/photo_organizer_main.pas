@@ -292,9 +292,6 @@ begin
     FolderStructureCombo.Enabled:=True;
     GuessDateCheckBox.Enabled:=True;
 
-    // open explorer in new folder structure // debug this is ok?
-    ExecuteProcess('start', OutputFolder.Caption );
-
     // OK message
     ShowMessage('Everything done! Thanks!');
 end;
