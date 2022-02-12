@@ -53,6 +53,7 @@ type
 
   TMainForm = class(TForm)
     FolderStructureCombo: TComboBox;
+    GuessDateCheckBox: TCheckBox;
     LabelStatus: TLabel;
     SortModeLabel: TLabel;
     ProgressBar1: TProgressBar;
@@ -213,20 +214,26 @@ begin
             // should attemp to take date from file date!
             if photoOut = '-' then
             begin
-               // no EXIF date, try with file date
-               fileDateLongInt := FileAge(photoIn);
-
-               If fileDateLongInt <> -1 then
+               if GuessDateCheckBox.Checked then // no EXIF date, try with file date
                begin
-                     fileDate := FileDateTodateTime(fileDateLongInt);
-                     DateTimeToString(fileDateStr, 'yyyy\mm', fileDate ); // replace format with combo box option!! DEBUG
-                     ShowMessage('DEBUG found date ' + fileDateStr + LineEnding + ExtractFileName(photoIn));
-                     photoOut:= fileDateStr;
+                 fileDateLongInt := FileAge(photoIn);  // get file date
+
+                 If fileDateLongInt <> -1 then // worked?
+                 begin
+                       fileDate := FileDateTodateTime(fileDateLongInt);
+                       DateTimeToString(fileDateStr, 'yyyy\mm', fileDate ); // replace format with combo box option!! DEBUG
+                       //ShowMessage('DEBUG found date ' + fileDateStr + LineEnding + ExtractFileName(photoIn));
+                       photoOut:= fileDateStr;
+                 end
+                 else
+                 begin
+                      // I cant find the damn date
+                      photoOut:= 'no_date_found';
+                 end;
                end
                else
-               begin
-                    // I cant find the damn date
-                    photoOut:= 'no_date_found';
+               begin // user wants to ignore file date
+                   photoOut:= 'no_date_found';
                end;
             end;
 

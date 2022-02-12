@@ -1,12 +1,12 @@
 object MainForm: TMainForm
   Left = 263
-  Height = 422
+  Height = 460
   Top = 127
   Width = 622
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Photo Organizer'
-  ClientHeight = 402
+  ClientHeight = 440
   ClientWidth = 622
   Menu = MainMenu
   OnClose = FormClose
@@ -77,7 +77,7 @@ object MainForm: TMainForm
   object LabelStep3: TLabel
     Left = 8
     Height = 15
-    Top = 192
+    Top = 216
     Width = 196
     Caption = 'Step 3 - Find photos to copy or move'
     ParentColor = False
@@ -85,7 +85,7 @@ object MainForm: TMainForm
   object FindPhotosBtn: TButton
     Left = 8
     Height = 25
-    Top = 216
+    Top = 240
     Width = 240
     Caption = 'Find Photos'
     Enabled = False
@@ -95,16 +95,16 @@ object MainForm: TMainForm
   object LabelStep4: TLabel
     Left = 8
     Height = 15
-    Top = 248
-    Width = 233
-    Caption = 'Step 4 - Choose to copy or move the photos'
+    Top = 272
+    Width = 219
+    Caption = 'Step 4 - Copy the photos into new folders'
     Enabled = False
     ParentColor = False
   end
   object CopyPhotosBTN: TButton
     Left = 8
     Height = 56
-    Top = 272
+    Top = 296
     Width = 240
     Caption = 'COPY PHOTOS'
     Enabled = False
@@ -114,7 +114,7 @@ object MainForm: TMainForm
   object ResultsMemo: TMemo
     Left = 256
     Height = 136
-    Top = 192
+    Top = 216
     Width = 360
     Lines.Strings = (
       'Here you will see the results of the search.'
@@ -134,15 +134,15 @@ object MainForm: TMainForm
     Left = 8
     Height = 16
     Hint = 'Working on it'
-    Top = 384
+    Top = 416
     Width = 608
     Step = 1
     TabOrder = 8
   end
   object FolderStructureCombo: TComboBox
-    Left = 472
+    Left = 405
     Height = 23
-    Top = 158
+    Top = 168
     Width = 144
     ItemHeight = 15
     ItemIndex = 0
@@ -157,9 +157,9 @@ object MainForm: TMainForm
     Text = 'Year, Month'
   end
   object SortModeLabel: TLabel
-    Left = 336
+    Left = 256
     Height = 15
-    Top = 166
+    Top = 168
     Width = 122
     Caption = 'Output folder structure'
     ParentColor = False
@@ -167,12 +167,22 @@ object MainForm: TMainForm
   object LabelStatus: TLabel
     Left = 8
     Height = 48
-    Top = 336
+    Top = 360
     Width = 608
     AutoSize = False
     Caption = 'Here you will see status information about the work done.'
     Enabled = False
     ParentColor = False
+  end
+  object GuessDateCheckBox: TCheckBox
+    Left = 256
+    Height = 19
+    Top = 192
+    Width = 293
+    Caption = 'Guess date from file date when no EXIF data present'
+    Checked = True
+    State = cbChecked
+    TabOrder = 10
   end
   object MainMenu: TMainMenu
     Left = 320
