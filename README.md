@@ -30,6 +30,10 @@ There you can see my portfolio, I'm a freelancer, you can hire me for your proje
 
 **TODO** write this section
 
+![Screenshoot](screenshoot01.jpg)
+
+![Screenshoot](screenshoot02.jpg)
+
 ## Compiling
 
 You need Lazarus: https://www.lazarus-ide.org/

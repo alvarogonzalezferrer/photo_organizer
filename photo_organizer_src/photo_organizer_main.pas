@@ -97,6 +97,21 @@ implementation
 
 { TMainForm }
 
+// This function returns true if Directory is an empty directory.
+function DirectoryIsEmpty(Directory: string): Boolean;
+var
+  SR: TSearchRec;
+  i: Integer;
+begin
+  Result := False;
+  FindFirst(IncludeTrailingPathDelimiter(Directory) + '*', faAnyFile, SR);
+  for i := 1 to 2 do
+    if (SR.Name = '.') or (SR.Name = '..') then
+      Result := FindNext(SR) <> 0;
+  FindClose(SR);
+end;
+
+
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
      // DEBUG load configuration
@@ -343,8 +358,15 @@ begin
        end
        else
        begin
-            OutputFolder.Caption := AppendPathDelim(SelectDirectoryDialog1.FileName);
-            FindPhotosBtn.Enabled := True;  // enable step 3
+            if DirectoryIsEmpty(AppendPathDelim(SelectDirectoryDialog1.FileName)) then
+            begin
+                 OutputFolder.Caption := AppendPathDelim(SelectDirectoryDialog1.FileName);
+                 FindPhotosBtn.Enabled := True;  // enable step 3
+            end
+            else
+            begin
+                 ShowMessage('Output folder must be empty for safety!' + LineEnding + 'Choose or create a empty folder!');
+            end;
        end;
   end;
 end;
