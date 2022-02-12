@@ -147,6 +147,8 @@ begin
      FindPhotosBtn.Enabled:=False;
      CopyPhotosBTN.Enabled:=False;
      CopyPhotosBTN.Caption:='WORKING!';
+     LabelStatus.Enabled:=True;
+
 
     // create list of files to process
     tmpFileList := GetTempFileName(); // get temp filename for output
@@ -222,23 +224,21 @@ begin
             // copy file
             photoOut := photoOut + '\' + ExtractFileName(photoIn);
 
+            LabelStatus.Caption:='In: ' + photoIn + LineEnding + 'Out: ' + photoOut;
+
             CopyFile(photoIn, photoOut, [cffPreserveTime, cffCreateDestDirectory]);
-
-
 
             // progress bar
             ProgressBar1.Position := ProgressBar1.Position + 1;
             Application.ProcessMessages;
 
-
-            //ShowMessage(photoIn + #13#10+ photoOut);
        end;
 
     finally
      CloseFile(tfIn);
     end;
 
-    //ShowMessage('DEBUG all done ready to clean up'); // DEBUG
+
 
     // cleanup
     // delete temp files
