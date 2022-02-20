@@ -16,10 +16,17 @@ When you download your photos to your computer the file date is not necessarily 
 
 If you have a large number of files on your memory card or hard drive with photos taken over many different days it can be a mess to try to organize the photos.
 
-
 # License 
 
 [Read the license to use here.](LICENSE.md)
+
+# Install 
+
+For Windows, you just need to download the pre-compiled installer. 
+
+Go to Releases and download the latest version.
+
+[**Check releases** for pre-compiled Windows binary!](https://github.com/alvarogonzalezferrer/photo_organizer/releases)
 
 # Who am I?
 
