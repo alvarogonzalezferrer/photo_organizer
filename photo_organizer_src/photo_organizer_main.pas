@@ -205,7 +205,7 @@ begin
          3: folderFormat := '%m';
     end;
 
-    batchCommand := '@echo DONT CLOSE THIS WINDOW WE ARE READING YOUR PHOTOS DATES - WAIT PLEASE! && @echo ESPERE POR FAVOR - NO CIERRE ESTA VENTANA && @' + exifTool + ' -T -FilePath -CreateDate -d ' + folderFormat + ' -@ '+ tmpFileList + ' > ' + tmpFileOutputList ;
+    batchCommand := '@echo DONT CLOSE THIS WINDOW WE ARE READING YOUR PHOTOS DATES - WAIT PLEASE! && @echo ESPERE POR FAVOR - NO CIERRE ESTA VENTANA && @"' + exifTool + '" -T -FilePath -CreateDate -d "' + folderFormat + '" -@ "'+ tmpFileList + '" > "' + tmpFileOutputList + '"' ;
 
     ShowMessage('We will scan your photos for date EXIF data' + LineEnding + 'This will open a special window, do NOT close it.' + LineEnding + 'Let the process end without closing the window!');
 
