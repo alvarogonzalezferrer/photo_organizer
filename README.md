@@ -2,19 +2,19 @@
 
 Photo organizer for your local photo backups.
 
+Copy photos to year / month and /day (optional) folders according to their EXIF data.
+
 ![Screenshoot](screenshoot00.jpg)
 
 ![Screenshoot](screenshoot02.jpg) 
 
-Move photos to year, month and day (optional) folders according to their EXIF data.
-
-You can choose Year and Month, or Year, Month and Day, or only by Year or Month.
-
-Automatically find the original date taken of their photos and then move and sort the photos into folders based on that date.
+Automatically finds the original date taken of the photos, and then sorts the photos into folders based on that date.
 
 When you download your photos to your computer the file date is not necessarily the same as the date you took the photo. 
 
-If you have a large number of files on your memory card or hard drive with photos taken over many different days it can be a mess to try to organize the photos.
+If you have a large number of files on your memory card, or hard drive, with photos taken over many different days, it can be a mess to try to organize the photos.
+
+You can choose Year / Month, or Year / Month / Day, or only by Year or Month as folder structure.
 
 # License 
 
